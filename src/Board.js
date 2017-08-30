@@ -86,20 +86,16 @@
           count++;
         }
       });
-      if (count > 1) {
-        return true;
-      }
-
-      return false;
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      var board = this.rows();
+      var rows = this.rows();
       // var col = this.columns();
       // console.log(col)
       var bool = false;
-      for (i = 0; i < board.length; i++) {
+      for (i = 0; i < rows.length; i++) {
         if (this.hasRowConflictAt(i)) {
           bool = true;
         }
@@ -114,42 +110,35 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      // loop thru this.attributes.n...
-      // this.get(i)[colIndex]
-
-
-
-
-      // var col = this.attributes.n;
-      // var count = 0;
-      // col.forEach(function(item){
-      //   if (item === 1) {
-      //     count++;
-      //   }
-      // });
-      // if (count > 1) {
-      //   return true;
-      // }
-      
-      // return false;
+      var count = 0;
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.get(i)[colIndex] === 1) {
+          count++;
+        };
+      }
+      return count > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      // var rows = this.rows();
-      // var columns = [];
-      // rows.forEach(function(row, idx) {
-      //   columns[idx] = columns[idx] || [];
-      //   columns[idx].push(row[idx]);
-      // });
-
-      // var bool = false;
-      // for (i = 0; i < columns.length; i++) {
-      //   if (this.hasColConflictAt(i)) {
-      //     bool = true;
-      //   }
-      // }
       // return bool;
+      var columns = [];
+
+      var rows = this.rows();
+
+      rows.forEach(function(row, index) {
+        columns[index] = columns[index] || []; //first iteration
+        columns[index].push(row[index][index]);
+      });
+
+      var bool = false;
+      var context = this;
+      columns.forEach(function(col, index) {
+        if (context.hasColConflictAt(index)) {
+          bool = true;
+        }
+      });
+      return bool;
     },
 
 
