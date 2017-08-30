@@ -79,12 +79,32 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var row = this.get(rowIndex);
+      var count = 0;
+      row.forEach(function(item){
+        if (item === 1) {
+          count++;
+        }
+      });
+      if (count > 1) {
+        return true;
+      }
+
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var board = this.rows();
+      // var col = this.columns();
+      // console.log(col)
+      var bool = false;
+      for (i = 0; i < board.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          bool = true;
+        }
+      }
+      return bool;
     },
 
 
@@ -94,12 +114,42 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // loop thru this.attributes.n...
+      // this.get(i)[colIndex]
+
+
+
+
+      // var col = this.attributes.n;
+      // var count = 0;
+      // col.forEach(function(item){
+      //   if (item === 1) {
+      //     count++;
+      //   }
+      // });
+      // if (count > 1) {
+      //   return true;
+      // }
+      
+      // return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      // var rows = this.rows();
+      // var columns = [];
+      // rows.forEach(function(row, idx) {
+      //   columns[idx] = columns[idx] || [];
+      //   columns[idx].push(row[idx]);
+      // });
+
+      // var bool = false;
+      // for (i = 0; i < columns.length; i++) {
+      //   if (this.hasColConflictAt(i)) {
+      //     bool = true;
+      //   }
+      // }
+      // return bool;
     },
 
 
@@ -146,3 +196,5 @@
   };
 
 }());
+
+var board = new Board({n:4})

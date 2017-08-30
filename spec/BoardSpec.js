@@ -30,10 +30,10 @@ describe('Board', function() {
 
   describe('Board with row conflicts', function() {
     verifyConflictTypes(['row', 'rooks', 'queens'], [
-      [0, 0, 0, 0],
-      [1, 1, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0]
+      [0, 0, 0, 0], //[0,1,0,0]
+      [1, 1, 0, 0], //[0,0,1,0]
+      [0, 0, 0, 0], //[0,0,0,0]
+      [0, 0, 0, 0]  //[0,0,0,0]
     ]);
   });
 
