@@ -148,15 +148,11 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      // debugger
+      // LOGIC HOLE: KEEP TRACK OF CONFLICTS
       var rows = this.rows();
       var startRow = 1;
-      console.log('majorDiagonalColumnIndexAtFirstRow', majorDiagonalColumnIndexAtFirstRow);
-      // if (parseInt(majorDiagonalColumnIndexAtFirstRow) === 0) {
-      //   if (rows[startRow][parseInt(majorDiagonalColumnIndexAtFirstRow)] === 0) {
-
-      //   }
-      // }
+      // console.log('majorDiagonalColumnIndexAtFirstRow', majorDiagonalColumnIndexAtFirstRow);
+     
       var startCol = parseInt(majorDiagonalColumnIndexAtFirstRow) + 1; // ARGUMENT MAY NOT BE COUNTING INDEX @ 0
       // rows[0][majorDiagonalColumnIndexAtFirstRow] gets us where the 1 is in first row
 
@@ -193,18 +189,50 @@
       var rows = this.rows();
       var startRow = 1;
       var startCol = 0; 
-      
-      while ( startCol < boardSize - 1 && startRow < boardSize - 1) {
-        var currentBox = rows[startRow][startCol];
-        var diagonalsFromCurrentBox = rows[startRow + 1][startCol + 1];
-        if (diagonalsFromCurrentBox === 1 ) { // can put ++ within []
-          return true;
-        }
-        startCol++
-        startRow++
-      }
+      var lowerLeftCount = 0;
+      var truthy = false;
 
-      return false; // fixme
+      var recurseLowerLeft = function (startRow) {
+      debugger;
+      //we might be incrementing twice
+        while ( startCol < boardSize - 1 && startRow < boardSize - 1) {
+          var currentBox = rows[startRow][startCol];
+          if (currentBox === 1) {
+            lowerLeftCount++;
+          }
+          var diagonalsFromCurrentBox = rows[startRow + 1][startCol + 1];
+          if (diagonalsFromCurrentBox === 1 && lowerLeftCount >= 1) { // can put ++ within []
+            truthy = true;
+            }
+          startCol++;
+          recurseLowerLeft(startRow + 1);
+          }
+      };
+      
+      recurseLowerLeft(startRow);
+      // var currentBox = rows[startRow][startCol];
+      // var recurseLowerLeft = function (startRow) {
+      //   var conflicts = 0;
+      //   //while ( startRow < boardSize ) {
+      //   if (startRow === boardSize -1) {
+      //     return;
+      //   } else {
+      //     if ( currentBox === 1 ) {
+      //       conflicts++
+      //     }
+      //     startCol++
+      //     startRow++
+      //     if ( conflicts > 1 ) {
+      //       truthy = true;
+      //     }
+          
+      //   }
+      //   recurseLowerLeft(startRow + 1)
+      // };
+      
+      // recurseLowerLeft(startRow);
+
+      return truthy; // fixme
     },
 
 
@@ -214,12 +242,86 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      //upper left
+      var rows = this.rows();
+      var startRow = 0;
+      var startCol = parseInt(minorDiagonalColumnIndexAtFirstRow);
+      var boardSize = this.attributes.n;
+      var upperLeftCount = 0;
+
+      // var diagonal = rows[startRow + 1][startRow - 1];
+
+      while (startRow < boardSize && startCol >= 0) {
+      var currentBox = rows[startRow][startCol];
+        if (currentBox === 1) {
+          upperLeftCount++;
+        }
+
+        startRow++;
+        startCol--;
+
+      }
+
+      return upperLeftCount > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var rows = this.rows();
+      var boardSize = this.attributes.n;
+
+
+      //check upper left
+      for (var i = 0; i < boardSize; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      };
+
+
+      //recurse lower left
+      var startRow = 1;
+      var startCol = boardSize - 1;
+      var currentBox = rows[startRow][startCol];
+      var truthy = false;
+
+      var recurseLowerRight = function(startRow) {
+        var conflicts = 0;
+        //while ( startRow < boardSize ) {
+        if (startRow === boardSize -1) {
+          return;
+        } else {
+          if ( currentBox === 1 ) {
+            conflicts++
+          }
+          startCol--
+          startRow++
+          if ( conflicts > 1 ) {
+            truthy = true;
+          }
+          
+        }
+        recurseLowerRight(startRow + 1)
+      }
+
+
+
+      // var recurseLowerLeft = function(rowIndex) {
+      //   // base case
+      //   if ( startRow === boardSize ) {
+      //     return;
+      //   }
+      //   // recursive case
+
+
+      // }
+
+
+
+      recurseLowerRight(startRow);
+
+
+      return truthy;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
