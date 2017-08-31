@@ -100,34 +100,31 @@ window.countNQueensSolutions = function(n) {
   }
 
   var permArray = [];
-  var swap = function (array, pos1, pos2) {
-    var temp = array[pos1];
-    array[pos1] = array[pos2];
-    array[pos2] = temp;
-  };
 
-  var heapsPermute = function (array, output, n) {
-    n = n || array.length; // set n default to array.length
-    if (n === 1) {
-      // solutionCount++;
-      console.log(array);
-      //inside this fn, it doesn't have access to permArray
-      console.log('waaait', permArray);
-      permArray.concat(array);
+function permute(permutation) {
+  var length = permutation.length,
+      result = [permutation.slice()],
+      c = new Array(length).fill(0),
+      i = 1, k, p;
+
+  while (i < length) {
+    if (c[i] < i) {
+      k = i % 2 && c[i];
+      p = permutation[i];
+      permutation[i] = permutation[k];
+      permutation[k] = p;
+      ++c[i];
+      i = 1;
+      result.push(permutation.slice());
     } else {
-      for (var d = 1; d <= n; d += 1) {
-        heapsPermute(array, output, n - 1);
-        if (n % 2) {
-          var j = 1;
-        } else {
-          var j = d;
-        }
-        swap(array, j - 1, n - 1); // -1 to account for javascript zero-indexing
-      }
-    };
-  };
-  
-  heapsPermute(flatArray)
+      c[i] = 0;
+      ++i;
+    }
+  }
+  permArray = result;
+}
+
+permute(flatArray);
 
   //go through permarray and take out any that have nums next to each other
   //|i-(i+1)| !=== 0
