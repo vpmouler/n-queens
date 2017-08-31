@@ -86,7 +86,6 @@ window.countNQueensSolutions = function(n) {
     
 
   var flatArray = [];
-  var permArray = [];
 
   if ( n === 0 || n === 1 ) {
     return 1;
@@ -100,6 +99,7 @@ window.countNQueensSolutions = function(n) {
     flatArray.push(i);
   }
 
+  var permArray = [];
   var swap = function (array, pos1, pos2) {
     var temp = array[pos1];
     array[pos1] = array[pos2];
@@ -110,15 +110,17 @@ window.countNQueensSolutions = function(n) {
     n = n || array.length; // set n default to array.length
     if (n === 1) {
       // solutionCount++;
-      permArray.push(array);
-
+      console.log(array);
+      //inside this fn, it doesn't have access to permArray
+      console.log('waaait', permArray);
+      permArray.concat(array);
     } else {
-      for (var i = 1; i <= n; i += 1) {
+      for (var d = 1; d <= n; d += 1) {
         heapsPermute(array, output, n - 1);
         if (n % 2) {
           var j = 1;
         } else {
-          var j = i;
+          var j = d;
         }
         swap(array, j - 1, n - 1); // -1 to account for javascript zero-indexing
       }
@@ -130,7 +132,7 @@ window.countNQueensSolutions = function(n) {
   //go through permarray and take out any that have nums next to each other
   //|i-(i+1)| !=== 0
   // debugger;
-  console.log('PA', permArray);
+  console.log('PA!!!!', permArray);
   var solutionCount = permArray.length;
   // console.log('solutioncount', solutionCount);
   for (var s = 0; s < permArray.length; s++) {
