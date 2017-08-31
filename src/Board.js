@@ -148,11 +148,62 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      // debugger
+      var rows = this.rows();
+      var startRow = 1;
+      console.log('majorDiagonalColumnIndexAtFirstRow', majorDiagonalColumnIndexAtFirstRow);
+      // if (parseInt(majorDiagonalColumnIndexAtFirstRow) === 0) {
+      //   if (rows[startRow][parseInt(majorDiagonalColumnIndexAtFirstRow)] === 0) {
+
+      //   }
+      // }
+      var startCol = parseInt(majorDiagonalColumnIndexAtFirstRow) + 1; // ARGUMENT MAY NOT BE COUNTING INDEX @ 0
+      // rows[0][majorDiagonalColumnIndexAtFirstRow] gets us where the 1 is in first row
+
+      // we need to check rows[0+1][majorDiagonalColumnIndexAtFirstRow + 1] 
+        // keep checking it until majorDiagonalColumnIndexAtFirstRow >= this.attributes.n (which is how many cols our matrix has)
+      var boardSize = this.attributes.n;
+      while ( startCol < boardSize && startRow < boardSize) {
+        var currentBox = rows[startRow - 1][parseInt(majorDiagonalColumnIndexAtFirstRow)];
+        var diagonalFromCurrentBox = rows[startRow][startCol];
+        if ( currentBox === 1  &&  diagonalFromCurrentBox === 1 ) { // can put ++ within []
+          return true;
+        }
+        startCol++
+        startRow++
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var boardSize = this.attributes.n;
+      //solution for upper left of board
+      var startIndex = 0;
+      // console.log('THIS', this)
+      while ( startIndex < boardSize ) {
+        if ( this.hasMajorDiagonalConflictAt(startIndex) ) {
+          // console.log('RETURNING TRUE');
+          return true;
+        }
+        startIndex++
+      }
+
+      //check lower left
+      var rows = this.rows();
+      var startRow = 1;
+      var startCol = 0; 
+      
+      while ( startCol < boardSize - 1 && startRow < boardSize - 1) {
+        var currentBox = rows[startRow][startCol];
+        var diagonalsFromCurrentBox = rows[startRow + 1][startCol + 1];
+        if (diagonalsFromCurrentBox === 1 ) { // can put ++ within []
+          return true;
+        }
+        startCol++
+        startRow++
+      }
+
       return false; // fixme
     },
 
