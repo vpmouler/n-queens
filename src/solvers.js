@@ -31,52 +31,45 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
-  if (n === 1) {
+  var solutionCount = 0;
+
+  var flatArray = [];
+
+  if ( n === 1 ) {
     return 1;
   }
 
-  if (n === 2) {
-    return n;
+  for ( var i = 0; i < n; i++ ) {
+    flatArray.push(i);
   }
 
+  var swap = function (array, pos1, pos2) {
+    var temp = array[pos1];
+    array[pos1] = array[pos2];
+    array[pos2] = temp;
+  };
 
-  var flatArray = _.range(n); //these are all the possible values of a correct solution
-  console.log('FLATARRAY HERE!!!!!!', flatArray, n);
-  //find all permutations of flatArray
-  var permResults = [];
-
-  var permutations = function (flatArray) {
-  //loop through flat array
-    for (var i=0; i < flatArray.length; i++) {
-      // Copy array
-      var copy = flatArray;
-
-      // Cut one element from list
-      var head = copy.splice(i, 1);
-      
-      // Permute rest of list
-      var rest = permutations(copy);
-      
-      // Add head to each permutation of rest of list
-      // debugger;
-      for (var j = 0; j < rest.length; j++) {
-        var next = head.concat(rest[j]);
-        permResults.push(next);
+  var heapsPermute = function (array, output, n) {
+    n = n || array.length; // set n default to array.length
+    if (n === 1) {
+      solutionCount++;
+    } else {
+      for (var i = 1; i <= n; i += 1) {
+        heapsPermute(array, output, n - 1);
+        if (n % 2) {
+          var j = 1;
+        } else {
+          var j = i;
+        }
+        swap(array, j - 1, n - 1); // -1 to account for javascript zero-indexing
       }
-    }
-
-  }
-  permutations(flatArray);
-
-
-
-
-
-  //return number of permutations/solutions
-  solutionCount = permResults.length;
+    };
+  };
+  
+  heapsPermute(flatArray)
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+
   return solutionCount;
 };
 
@@ -90,7 +83,65 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+    
+
+  var flatArray = [];
+  var permArray = [];
+
+  if ( n === 0 || n === 1 ) {
+    return 1;
+  }
+
+  if ( n === 2 || n === 3) {
+    return 0;
+  }
+
+  for ( var i = 0; i < n; i++ ) {
+    flatArray.push(i);
+  }
+
+  var swap = function (array, pos1, pos2) {
+    var temp = array[pos1];
+    array[pos1] = array[pos2];
+    array[pos2] = temp;
+  };
+
+  var heapsPermute = function (array, output, n) {
+    n = n || array.length; // set n default to array.length
+    if (n === 1) {
+      // solutionCount++;
+      permArray.push(array);
+
+    } else {
+      for (var i = 1; i <= n; i += 1) {
+        heapsPermute(array, output, n - 1);
+        if (n % 2) {
+          var j = 1;
+        } else {
+          var j = i;
+        }
+        swap(array, j - 1, n - 1); // -1 to account for javascript zero-indexing
+      }
+    };
+  };
+  
+  heapsPermute(flatArray)
+
+  //go through permarray and take out any that have nums next to each other
+  //|i-(i+1)| !=== 0
+  // debugger;
+  console.log('PA', permArray);
+  var solutionCount = permArray.length;
+  // console.log('solutioncount', solutionCount);
+  for (var s = 0; s < permArray.length; s++) {
+    for (var t = 0 ; t < permArray[s].length - 1; t++) {
+      var currentPerm = permArray[s];
+      if (Math.abs(currentPerm[t] - currentPerm[t + 1]) === 1) {
+        solutionCount--;
+        t = permArray[s].length;
+      }
+    }
+  }
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
